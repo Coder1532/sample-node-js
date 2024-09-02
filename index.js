@@ -32,36 +32,36 @@ app.get('/user', (req, res) => {
   res.send(`User ${name} is ${age} years old.`);
 });
 
+
+// Endpoint to start the cron job
+app.get('/start-cron', (req, res) => {
+  if (!cronTask) {
+      cronTask = cron.schedule('*/5 * * * * *', () => {
+          console.log('Cron job is running every 5 seconds');
+      });
+      res.send('Cron job started.');
+  } else {
+      res.send('Cron job is already running.');
+  }
+});
+
+// Endpoint to stop the cron job
+app.get('/stop-cron', (req, res) => {
+  if (cronTask) {
+      cronTask.stop();
+      cronTask = null;
+      res.send('Cron job stopped.');
+  } else {
+      res.send('No cron job is running.');
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
 
 
 
-// Endpoint to start the cron job
-app.get('/start-cron', (req, res) => {
-    if (!cronTask) {
-        cronTask = cron.schedule('*/5 * * * * *', () => {
-            console.log('Cron job is running every 5 seconds');
-        });
-        res.send('Cron job started.');
-    } else {
-        res.send('Cron job is already running.');
-    }
-});
 
-// Endpoint to stop the cron job
-app.get('/stop-cron', (req, res) => {
-    if (cronTask) {
-        cronTask.stop();
-        cronTask = null;
-        res.send('Cron job stopped.');
-    } else {
-        res.send('No cron job is running.');
-    }
-});
 
-app.listen(port, () => {
-    console.log(`App listening at http://localhost:${port}`);
-});
 
